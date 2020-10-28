@@ -64,22 +64,27 @@ public class BoardController {
 			if (rs.next()) {
 				totalRecordCounts = rs.getInt("counts");
 			}
-
 			currentPage = 0;
 			pageCounts = (int) Math.ceil((double) totalRecordCounts / (double) recordsToDisplay);
-
+			
+			System.out.println(currentPage);
 		} else if (gubun.equals("previous")) {
 			if (currentPage != 0) {
 				currentPage -= 1;
 			}
+			System.out.println(currentPage);
 		} else if (gubun.equals("next")) {
+
 			currentPage += 1;
 			if (currentPage == pageCounts) {
 				currentPage -= 1;
 			}
+			System.out.println(currentPage);
 		} else if (gubun.equals("last")) {
+
 			currentPage = pageCounts - 1;
 		}
+		System.out.println(currentPage);
 
 		int startLimit = currentPage * recordsToDisplay;
 		int recordCountsToDisplay = recordsToDisplay;
@@ -99,12 +104,11 @@ public class BoardController {
 			boardList.add(board);
 		}
 		conn.close();
-
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("pageCounts", pageCounts);
 		model.addAttribute("displayItems", displayItems);
-
 		model.addAttribute("boardList", boardList);
+
 		return "board_list";
 	}
 
@@ -289,7 +293,7 @@ public class BoardController {
 			Blob blob = rs.getBlob("photo");
 			String contentType = rs.getString("content_type");
 
-			if (blob == null || contentType == null) {
+		if (blob == null || contentType == null) {
 				ClassPathResource resource = new ClassPathResource("images/투명.png");
 				InputStream inputStream = resource.getInputStream();
 				contentType = "image/png";
@@ -307,8 +311,7 @@ public class BoardController {
 				os.flush();
 				os.close();
 
-			}
-
+				 } 
 		}
 	}
 }

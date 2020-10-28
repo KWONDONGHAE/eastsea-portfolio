@@ -8,4 +8,6 @@
 	<li>grid</li>
 	<li>java</li>
 	<li>mysql</li>
+	<li>ID : eastsea@naver.com </li>
+	<li>Password : 134679</li>
 </ul>
