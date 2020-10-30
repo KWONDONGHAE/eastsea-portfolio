@@ -18,7 +18,6 @@ import javax.sql.DataSource;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,24 +66,24 @@ public class BoardController {
 			currentPage = 0;
 			pageCounts = (int) Math.ceil((double) totalRecordCounts / (double) recordsToDisplay);
 			
-			System.out.println(currentPage);
+			
 		} else if (gubun.equals("previous")) {
 			if (currentPage != 0) {
 				currentPage -= 1;
 			}
-			System.out.println(currentPage);
+			
 		} else if (gubun.equals("next")) {
 
 			currentPage += 1;
 			if (currentPage == pageCounts) {
 				currentPage -= 1;
 			}
-			System.out.println(currentPage);
+			
 		} else if (gubun.equals("last")) {
 
 			currentPage = pageCounts - 1;
 		}
-		System.out.println(currentPage);
+		
 
 		int startLimit = currentPage * recordsToDisplay;
 		int recordCountsToDisplay = recordsToDisplay;
@@ -97,10 +96,11 @@ public class BoardController {
 		while (rs.next()) {
 			int id = rs.getInt("id");
 			String title = rs.getString("title");
+			String content_type = rs.getString("content_type");
 			String author = rs.getString("author");
 			Date created_date = rs.getDate("created_date");
 
-			Board board = new Board(id, title, null, null, null, author, created_date);
+			Board board = new Board(id, title, null, null, content_type , author, created_date);
 			boardList.add(board);
 		}
 		conn.close();
@@ -292,26 +292,14 @@ public class BoardController {
 		if (rs.next()) {
 			Blob blob = rs.getBlob("photo");
 			String contentType = rs.getString("content_type");
+			byte byteArray[] = blob.getBytes(1, (int) blob.length());
+			response.setContentType(contentType);
 
-		if (blob == null || contentType == null) {
-				ClassPathResource resource = new ClassPathResource("images/투명.png");
-				InputStream inputStream = resource.getInputStream();
-				contentType = "image/png";
-				response.setContentType(contentType);
-				OutputStream os = response.getOutputStream();
-				byte byteArray[] = inputStream.readAllBytes();
-				os.write(byteArray);
-				os.flush();
-				os.close();
-			} else {
-				byte byteArray[] = blob.getBytes(1, (int) blob.length());
-				response.setContentType(contentType);
-				OutputStream os = response.getOutputStream();
-				os.write(byteArray);
-				os.flush();
-				os.close();
+			OutputStream os = response.getOutputStream();
+			os.write(byteArray);
+			os.flush();
+			os.close();
 
-				 } 
 		}
 	}
 }

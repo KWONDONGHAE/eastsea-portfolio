@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+<!-- 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"></property> 
 		<property name="url" value="jdbc:mysql://localhost:3306/message_board?useSSL=false&amp;serverTimezone=Asia/Seoul"></property> 
 		<property name="username" value="root"></property> <property name="password" 
@@ -23,7 +23,7 @@
 			value="#{ @dbUrl.getUserInfo().split(':')[0] }" />
 		<property name="password"
 			value="#{ @dbUrl.getUserInfo().split(':')[1] }" />
-	</bean>
+	</bean> 
 
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
