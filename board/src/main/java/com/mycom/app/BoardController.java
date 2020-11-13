@@ -38,7 +38,7 @@ public class BoardController {
 			@RequestParam(value = "pageCounts", defaultValue = "0") int pageCounts,
 			@RequestParam(value = "currentPage", defaultValue = "0") int currentPage,
 			@RequestParam(value = "displayItems", defaultValue = "3") int displayItems) throws SQLException {
-
+		
 		Connection conn = dataSource.getConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -64,26 +64,25 @@ public class BoardController {
 				totalRecordCounts = rs.getInt("counts");
 			}
 			currentPage = 0;
+			
 			pageCounts = (int) Math.ceil((double) totalRecordCounts / (double) recordsToDisplay);
-			
-			
+
 		} else if (gubun.equals("previous")) {
 			if (currentPage != 0) {
 				currentPage -= 1;
 			}
-			
+
 		} else if (gubun.equals("next")) {
 
 			currentPage += 1;
 			if (currentPage == pageCounts) {
 				currentPage -= 1;
 			}
-			
+
 		} else if (gubun.equals("last")) {
 
 			currentPage = pageCounts - 1;
 		}
-		
 
 		int startLimit = currentPage * recordsToDisplay;
 		int recordCountsToDisplay = recordsToDisplay;
@@ -100,7 +99,7 @@ public class BoardController {
 			String author = rs.getString("author");
 			Date created_date = rs.getDate("created_date");
 
-			Board board = new Board(id, title, null, null, content_type , author, created_date);
+			Board board = new Board(id, title, null, null, content_type, author, created_date);
 			boardList.add(board);
 		}
 		conn.close();
@@ -262,14 +261,41 @@ public class BoardController {
 		}
 
 	}
-
 	@RequestMapping(value = "/board_delete", method = RequestMethod.GET)
-	public String board_delete(Model model, @RequestParam("id") int id) throws Exception {
+	public String board_delete(Model model, @RequestParam("id") int id) throws Exception{
+		Connection conn = dataSource.getConnection();
+		String sql = "select * from board where id = ?";
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ps.setInt(1, id);
+
+		ResultSet rs = ps.executeQuery();
+
+		Board board = null;
+		if (rs.next()) {
+
+			String title = rs.getString("title");
+			String message = rs.getString("message");
+			Blob photo = rs.getBlob("photo");
+			String contentType = rs.getString("content_type");
+			String author = rs.getString("author");
+			Date created_date = rs.getDate("created_date");
+
+			board = new Board(id, title, message, photo, contentType, author, created_date);
+		}
+
+		conn.close();
+
+		model.addAttribute("board", board);
+
+		return "board_delete";
+	}
+	
+	@RequestMapping(value = "/board_delete_process", method = RequestMethod.POST)
+	public String board_delete_process(Model model, @RequestParam("id") int id) throws Exception {
 		Connection conn = dataSource.getConnection();
 		String sql = "delete from board where id=?";
 		PreparedStatement ps = conn.prepareStatement(sql);
 		ps.setInt(1, id);
-
 		int result = ps.executeUpdate();
 
 		if (result > 0) {
@@ -299,7 +325,6 @@ public class BoardController {
 			os.write(byteArray);
 			os.flush();
 			os.close();
-
 		}
 	}
 }

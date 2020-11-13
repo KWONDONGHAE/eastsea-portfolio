@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page session="false" pageEncoding="UTF-8"%>
 <html>
 <head>
@@ -46,48 +47,16 @@ select {
 						</c:url> <a href="${url}"> <c:out value="${board.title}" />
 					</a></td>
 					<td>
-					<c:choose>
-							<c:when test="${board.photo && null ne board.contentType}">
-								<c:url value="get_image" var="image_url">
-									<c:param name="id" value="${board.id}" />
-								</c:url>
-								<a href="${url}"> <img class="img-thumbnail"
-									src="<c:url value='${image_url}'/>" width="40px" height="40px" /></a>
-							</c:when>
-							<c:otherwise>
-								<img src="/resources/static/img/투명.png" width="40px"
-									height="40px" class="img-thumbnail" />
-							</c:otherwise>
-						</c:choose> 
-						
-						<%-- <c:if
-							test="${null eq board.photo  ||  null eq board.content_type }">
-							<img src="/resources/static/img/투명.png" width="40px"
-								height="40px" class="img-thumbnail" />
-						</c:if> 
-						<c:if
-							test="${null ne board.photo  && null ne board.content_type }">
-						 	<c:url value="board_details" var="url">
+					<c:if test="${fn:startsWith(board.content_type, 'image')}">
+							<c:url value="board_details" var="url">
 								<c:param name="id" value="${board.id}" />
 							</c:url>
-							<a href="${url}">  
-							
-							<c:url value="get_image" var="image_url">
+							<a href="${url}"> <c:url value="get_image" var="image_url">
 									<c:param name="id" value="${board.id}" />
-								</c:url> <img class="img-thumbnail" src="<c:url value='${image_url}' />"
-								width="40px" height="40px" />
-							
-							
+								</c:url> <img src="<c:url value='${image_url}' />" width="40px"
+								height="40px" />
 							</a>
-						</c:if> <<c:url value="board_details" var="url"> ${pageContext.request.contextPath}
-							<c:param name="id" value="${board.id}" />
-						</c:url> <a href="${url}"> <c:url value="get_image" var="image_url">
-								<c:param name="id" value="${board.id}" />
-							</c:url> <img class="img-thumbnail" src="<c:url value='${image_url}' />"
-							width="40px" height="40px" />
-					</a>
-					 --%>
-					 
+						</c:if>		 
 					 </td>
 					<td><c:out value="${board.author}" /></td>
 					<td><c:out value="${board.created_date}" /></td>
@@ -118,7 +87,7 @@ select {
 		<div align="center">
 			<c:set var="pageCounts" value="${pageCounts}" />
 			<c:set var="currentPage" value="${currentPage}" />
-			<c:out value="${currentPage}" />
+			<%-- <c:out value="${currentPage}" /> --%>
 
 			<span> <c:url value="/board_list" var="url_first">
 					<c:param name="displayItems" value="${displayItems}" />

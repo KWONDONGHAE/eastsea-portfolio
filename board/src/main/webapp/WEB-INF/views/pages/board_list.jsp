@@ -87,7 +87,7 @@ select {
 		<div align="center">
 			<c:set var="pageCounts" value="${pageCounts}" />
 			<c:set var="currentPage" value="${currentPage}" />
-			<%-- <c:out value="${currentPage}" /> --%>
+			
 
 			<span> <c:url value="/board_list" var="url_first">
 					<c:param name="displayItems" value="${displayItems}" />
@@ -117,6 +117,7 @@ select {
 				</c:url> <a href="${url_last}" class="btn btn-outline-secondary">마지막</a>
 			</span>
 		</div>
+		
 	</div>
 	<script src="webjars/jquery/3.5.1/jquery.min.js"></script>
 	<script src="webjars/bootstrap/4.5.2/js/bootstrap.min.js"></script>
